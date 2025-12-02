@@ -17,7 +17,7 @@ end
 
 function SumPuzzlePlugin:createGame()
     local game = SumPuzzle:new()
-    game:initialize({rows = 5, cols = 5, lives = 3})
+    game:initialize()
     return game
 end
 

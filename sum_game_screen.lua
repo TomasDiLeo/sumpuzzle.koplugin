@@ -32,7 +32,9 @@ function SumPuzzleScreen:getTopButtons()
         {
             {
                 text = _("New game"),
-                callback = function() self:onNewGame() end,
+                callback = function() 
+                    self:onShowDifficultyDialog()
+                    end,
             },
             {
                 text = _("Clear"),
@@ -48,6 +50,53 @@ function SumPuzzleScreen:getTopButtons()
             },
         },
     }
+end
+
+function SumPuzzleScreen:onShowDifficultyDialog()
+    local UIManager = require("ui/uimanager")
+    local ButtonDialog = require("ui/widget/buttondialog")
+    
+    local buttons = {
+        {
+            {
+                text = _("Classic (5×5)"),
+                callback = function()
+                    self:changeDifficulty({size = 5, density = math.random(10, 15), cages = nil})
+                    UIManager:close(self.difficulty_dialog)
+                end,
+            },
+        },
+        {
+            {
+                text = _("Cages (8×8)"),
+                callback = function()
+                    self:changeDifficulty({size = 8, density = math.random(28, 38), cages = 18})
+                    UIManager:close(self.difficulty_dialog)
+                end,
+            },
+        }
+    }
+    
+    self.difficulty_dialog = ButtonDialog:new{
+        title = _("Select Difficulty"),
+        buttons = buttons,
+    }
+    
+    UIManager:show(self.difficulty_dialog)
+end
+
+function SumPuzzleScreen:changeDifficulty(params)
+    params = params or {}
+    params.size = params.size or 5
+    params.density = params.density or 10
+    params.cages = params.cages or nil
+
+    self.game:initialize({rows = params.size, cols = params.size, cages = params.cages})
+    self.game:generatePuzzle({cages = params.cages, density = params.density})
+    self.renderer:updateMetrics()
+    self.game:resetState()
+    self.renderer:refresh()
+    self.plugin:saveState()
 end
 
 function SumPuzzleScreen:getActionButtons()
@@ -84,10 +133,6 @@ function SumPuzzleScreen:updateStatus(message)
     
     local status = T(_("\nRow %1, Col %2"), 
                         row, col)
-    
-    if self.game:checkWinCondition() then
-        status = "\n" .. _("Puzzle complete! All sums match!")
-    end
     
     PuzzleScreen.updateStatus(self, status)
 end
@@ -128,15 +173,8 @@ function SumPuzzleScreen:onSubmit()
     if ok then
         UIManager:show(InfoMessage:new{
             text = msg,
-            timeout = 2,
+            timeout = 3,
         })
-        
-        if not self.game.state then
-            UIManager:show(InfoMessage:new{
-                text = _("Congratulations! Puzzle solved!"),
-                timeout = 3,
-            })
-        end
     else
         UIManager:show(InfoMessage:new{
             text = T(_("Puzzle not Solved: sum %1"), msg),
@@ -148,6 +186,7 @@ function SumPuzzleScreen:onSubmit()
 end
 
 function SumPuzzleScreen:onHint()
+
     -- Find all cells that are part of the solution but not yet selected
     local available_hints = {}
     
@@ -161,27 +200,33 @@ function SumPuzzleScreen:onHint()
     
     -- If we found available hints, pick one randomly
     if #available_hints > 0 then
+        if self.game:consumeHint() == false then
+            self:updateStatus(_("No hints remaining!"))
+            return
+        end
+
         local random_index = math.random(1, #available_hints)
         local hint = available_hints[random_index]
         
-        self.game.state_grid[hint.row][hint.col] = 1
+        local ok, err = self.game:applyMove({
+            action = "toggle",
+            row = hint.row,
+            col = hint.col,
+            cellState = 1,
+        })
+    
+        if not ok then
+            self:updateStatus(err)
+            return
+        end
+
         self.renderer:refresh()
         self.plugin:saveState()
         
-        local temp = T(_("Hint: Selected cell at %1,%2"), hint.row, hint.col)
-        self:updateStatus(temp)
+        self:updateStatus(T(_("%1 Hints remaining"), self.game.hints))
     else
         self:updateStatus(_("No hints available. All solution cells are selected!"))
     end
-end
-
-function SumPuzzleScreen:onNewGame()
-    self.game:resetState()
-    self.game:generatePuzzle()
-    self.renderer:updateMetrics()
-    self.renderer:refresh()
-    self.plugin:saveState()
-    self:updateStatus(_("New puzzle generated!"))
 end
 
 function SumPuzzleScreen:onRestart()
