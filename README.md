@@ -1,43 +1,89 @@
-# Sum Puzzle KOReader Plugin
+# Sum Puzzle - KOReader Plugin
 
-Solve a basic random 5 x 5 Sum Number Puzzle
+A number puzzle game for KOReader where you select numbers from a grid to match target sums. Puzzle game inspired by the EasyBrain app Number Sums
 
-## How to open
+<img src="readme/difficulty.png" alt="drawing" width="300"/>
 
-1. Open KOReader.
-2. Go to the main menu.
-3. Open the *Tools* section.
-4. Select **Sum Puzzle**.
+## Game Modes
 
-## Basic controls
+### Classic Mode (5×5)
+A straightforward grid where you select numbers that add up to the target sums shown on the edges.
 
-- **Board**
-  - Tap any cell to toggle the state of the cell
-  - Idle state
-  - Selected state
-  - Ignored State
-  *Note* : Only selected states are taken into account when summed, you don't need to ignore all incorrect cells
+<img src="readme/fivetimesfive.png" alt="drawing" width="300"/>
 
-- **Top buttons**
-  - **New game**: Generate a new random puzzle and start over.
-  - **Hint**: Selects a random correct cell
-  - *Note*: The Hint system does not remove incorrectly selected cells
+### Cages Mode (8×8)
+An advanced mode with irregular "cages" - groups of cells with their own sum targets shown in the top-left corner of each cage.
 
-- **Bottom buttons**
-  - **Submit**: Checks for completion.
-  - **Clear**: Clears all selections without changing the puzzle
-  - **Close**: Exit the Sums Puzzle screen and return to KOReader.
+<img src="readme/cages.png" alt="drawing" width="300"/>
 
-## Notes
+## Rules
 
-This plugin was tested on a JailBroken kindle with KoReader 2025.10
-If you find any bug or find a way to center the board (I'm new at making plugins)
-make a pull request or contact me at my reddit account or send me a mail to tomasjdle@gmail.com
+### Objective
+Select numbers from the grid so that:
+- Each **row's** selected numbers sum to the target shown on the **left edge**
+- Each **column's** selected numbers sum to the target shown on the **top edge**
+- In **Cages mode**: numbers within each cage must also sum to the cage's target (shown in the cage's top-left corner)
 
-I'm trying to implement a sort of framework called kopuzzle
-It's barebones as of now, I will make a repository for it later if 
-you want to expand upon it
+### How to Play
 
-## Credits
+1. **Tap a cell** to cycle through states:
+   - **Unselected** - number is visible but not counted
+   - **Selected** (bordered) - number counts toward sums
+   - **Crossed out** (white text) - number disappears for convenience, not counted
 
-- This plugin was based on the implementation of plugins by omer-faruq https://github.com/omer-faruq/
+2. **Check your progress**: The status bar shows important information about the game
+
+3. **Use hints**: Click "Hint" to reveal one correct cell (you have 3 hints per puzzle)
+
+4. **Submit**: When you think all sums match their targets, tap "Submit" to check your solution
+
+<img src="readme/Hints.png" alt="drawing" width="200"/>
+
+### Game States
+
+<img src="readme/fivetimesfivesolved.png" alt="drawing" width="300"/>
+*Example of a completed puzzle*
+
+<img src="readme/fivetimesfivesolvedscreen.png" alt="drawing" width="300"/>
+*Victory message after successful submission*
+
+## Installation
+
+### Requirements
+- Tested on KOReader 2025.10
+- Tested on Kindle Paperwhite 5 (PW5)
+
+### Installation Steps
+
+1. Download or clone this repository
+2. Copy the `sumpuzzle.koplugin` folder to your KOReader plugins directory:
+   ```
+   /koreader/plugins/sumpuzzle.koplugin/
+   ```
+3. Restart KOReader
+4. Access the game from: **Menu → Tools → Sum Puzzle**
+
+You can also delete this README and the images of the repository!
+
+## Code Structure
+
+```
+sumpuzzle.koplugin/
+├── kopuzzle                 # barebones framework for puzzle plugin making
+├── main.lua                 # Plugin entry point
+├── sum_game_logic.lua       # Core game logic and puzzle generation
+├── sum_game_renderer.lua    # Visual rendering and cell display
+├── sum_game_screen.lua      # UI controls and user interactions
+├── cages_generator.lua      # Algorithm for generating irregular cages
+└── _meta.lua                # Plugin metadata
+```
+
+## Features
+
+- **Two difficulty modes**: Classic 5×5 and advanced Cages 8×8
+- **Hint system**: 3 hints per puzzle to help you when stuck
+- **State persistence**: Your progress is automatically saved
+
+## Thanks
+---
+Again, thanks to https://github.com/omer-faruq/ for the base code I used as inspiration
