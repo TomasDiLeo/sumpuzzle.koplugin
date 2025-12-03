@@ -2,19 +2,19 @@
 
 A number puzzle game for KOReader where you select numbers from a grid to match target sums. Puzzle game inspired by the EasyBrain app Number Sums
 
-![Difficulty Selection](readme/difficulty.png)
+<img src="readme/difficulty.png" alt="drawing" width="300"/>
 
 ## Game Modes
 
 ### Classic Mode (5×5)
 A straightforward grid where you select numbers that add up to the target sums shown on the edges.
 
-![Classic 5x5 Game](readme/fivetimesfive.png)
+<img src="readme/fivetimesfive.png" alt="drawing" width="300"/>
 
 ### Cages Mode (8×8)
 An advanced mode with irregular "cages" - groups of cells with their own sum targets shown in the top-left corner of each cage.
 
-![Cages Mode](readme/cages.png)
+<img src="readme/cages.png" alt="drawing" width="300"/>
 
 ## Rules
 
@@ -37,20 +37,20 @@ Select numbers from the grid so that:
 
 4. **Submit**: When you think all sums match their targets, tap "Submit" to check your solution
 
-![Hints Feature](readme/Hints.png)
+<img src="readme/Hints.png" alt="drawing" width="200"/>
 
 ### Game States
 
-![Solved Puzzle](readme/fivetimesfivesolved.png)
+<img src="readme/fivetimesfivesolved.png" alt="drawing" width="300"/>
 *Example of a completed puzzle*
 
-![Solved Screen](readme/fivetimesfivesolvedscreen.png)
+<img src="readme/fivetimesfivesolvedscreen.png" alt="drawing" width="300"/>
 *Victory message after successful submission*
 
-## 🔧 Installation
+## Installation
 
 ### Requirements
-- KOReader 2025.10 or later
+- Tested on KOReader 2025.10
 - Tested on Kindle Paperwhite 5 (PW5)
 
 ### Installation Steps
