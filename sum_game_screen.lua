@@ -68,9 +68,18 @@ function SumPuzzleScreen:onShowDifficultyDialog()
         },
         {
             {
-                text = _("Cages (8×8)"),
+                text = _("Cages (8×8) Easy"),
                 callback = function()
                     self:changeDifficulty({size = 8, density = math.random(28, 38), cages = 18})
+                    UIManager:close(self.difficulty_dialog)
+                end,
+            },
+        },
+        {
+            {
+                text = _("Cages (8×8) Hard"),
+                callback = function()
+                    self:changeDifficulty({size = 8, density = math.random(28, 38), cages = 10})
                     UIManager:close(self.difficulty_dialog)
                 end,
             },
